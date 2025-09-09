@@ -1,10 +1,14 @@
-name: Spec to Issues
+name: Spec-to-Issues
 
 on:
-  workflow_dispatch:
   push:
     paths:
-      - 'tasks/**.md'
+      - "tasks/*.md"
+
+permissions:
+  contents: read
+  issues: write
+  projects: write
 
 jobs:
   create_issues:
@@ -13,10 +17,16 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Create GitHub Issues from a task file
-        uses: peter-evans/create-issue-from-file@v5
+      - name: Create issue from task file
+        id: create_issue
+        uses: peter-evans/create-issue-from-file@v4
         with:
-          title: "Task: Sample auto-generated issue"
-          content-filepath: tasks/sample-task.md
-          labels: "task,spec"
-          project: "https://github.com/users/ludwa6/projects/1/views/1"
+          title: New Task - ${{ github.event.head_commit.message }}
+          content-filepath: ${{ github.event.commits[0].modified[0] }}
+          labels: task
+
+      - name: Add created issue to project board
+        uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/users/ludwa6/projects/1
+          github-token: ${{ secrets.GITHUB_TOKEN }}
