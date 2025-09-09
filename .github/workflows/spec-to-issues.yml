@@ -1,31 +1,23 @@
-name: Spec-to-Issues
+name: Spec to Issues
 
 on:
   push:
     paths:
-      - "tasks/*.md"
-
-permissions:
-  contents: read
-  issues: write
+      - 'tasks/*.md'
 
 jobs:
   create_issues:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Create issue from task file
-        id: create_issue
         uses: peter-evans/create-issue-from-file@v4
         with:
-          title: New Task - ${{ github.event.head_commit.message }}
-          content-filepath: ${{ github.event.commits[0].modified[0] }}
-          labels: task
-
-      - name: Add created issue to project board
-        uses: actions/add-to-project@v0.5.0
-        with:
-          project-url: https://github.com/users/ludwa6/projects/1
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          title: "New task from spec"
+          content-filepath: tasks/sample-task.md
+          token: ${{ secrets.PROJECTS_TOKEN }}
