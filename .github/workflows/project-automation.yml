@@ -14,7 +14,7 @@ jobs:
         if: github.event_name == 'issues' && github.event.action == 'opened'
         uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/users/ludwa6/projects/1/views/1
+          project-url: https://github.com/users/ludwa6/projects/1
           github-token: ${{ secrets.GITHUB_TOKEN }}
           field-values: Status=📄 Spec Draft
 
@@ -22,7 +22,7 @@ jobs:
         if: contains(github.event.issue.labels.*.name, 'feature')
         uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/users/ludwa6/projects/1/views/1
+          project-url: https://github.com/users/ludwa6/projects/1
           github-token: ${{ secrets.GITHUB_TOKEN }}
           field-values: Status=📝 Ready for Tasks
 
@@ -30,7 +30,7 @@ jobs:
         if: contains(github.event.issue.labels.*.name, 'bug')
         uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/users/ludwa6/projects/1/views/1
+          project-url: https://github.com/users/ludwa6/projects/1
           github-token: ${{ secrets.GITHUB_TOKEN }}
           field-values: Status=🛠️ In Progress
 
@@ -38,7 +38,7 @@ jobs:
         if: contains(github.event.issue.labels.*.name, 'review')
         uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/users/ludwa6/projects/1/views/1
+          project-url: https://github.com/users/ludwa6/projects/1
           github-token: ${{ secrets.GITHUB_TOKEN }}
           field-values: Status=🔍 In Review
 
@@ -46,6 +46,6 @@ jobs:
         if: github.event.action == 'closed'
         uses: actions/add-to-project@v0.5.0
         with:
-          project-url: https://github.com/users/ludwa6/projects/1/views/1
+          project-url: https://github.com/users/ludwa6/projects/1
           github-token: ${{ secrets.GITHUB_TOKEN }}
           field-values: Status=✅ Done
