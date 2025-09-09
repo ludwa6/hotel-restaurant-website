@@ -19,4 +19,4 @@ jobs:
           title: "Task: Sample auto-generated issue"
           content-filepath: tasks/sample-task.md
           labels: "task,spec"
-          project: "https://github.com/orgs/ludwa6/projects/YOUR-PROJECT-NUMBER"
+          project: "https://github.com/users/ludwa6/projects/1/views/1"
