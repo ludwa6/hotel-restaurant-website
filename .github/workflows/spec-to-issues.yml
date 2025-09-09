@@ -1,0 +1,22 @@
+name: Spec to Issues
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tasks/**.md'
+
+jobs:
+  create_issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Issues from a task file
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "Task: Sample auto-generated issue"
+          content-filepath: tasks/sample-task.md
+          labels: "task,spec"
+          project: "https://github.com/orgs/ludwa6/projects/YOUR-PROJECT-NUMBER"

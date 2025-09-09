@@ -1,0 +1,43 @@
+name: Project Automation
+
+on:
+  issues:
+    types: [opened, labeled, unlabeled, reopened, closed]
+  pull_request:
+    types: [opened, closed, reopened, ready_for_review]
+
+jobs:
+  project_automation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add issues to Spec Draft
+        if: github.event_name == 'issues' && github.event.action == 'opened'
+        uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/orgs/ludwa6/projects/YOUR-PROJECT-NUMBER
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          field-values: Status=📄 Spec Draft
+
+      - name: Feature label → Ready for Tasks
+        if: contains(github.event.issue.labels.*.name, 'feature')
+        uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/orgs/ludwa6/projects/YOUR-PROJECT-NUMBER
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          field-values: Status=📝 Ready for Tasks
+
+      - name: Bug label → In Progress
+        if: contains(github.event.issue.labels.*.name, 'bug')
+        uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/orgs/ludwa6/projects/YOUR-PROJECT-NUMBER
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          field-values: Status=🛠️ In Progress
+
+      - name: Closed issues → Done
+        if: github.event.action == 'closed'
+        uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/orgs/ludwa6/projects/YOUR-PROJECT-NUMBER
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          field-values: Status=✅ Done
