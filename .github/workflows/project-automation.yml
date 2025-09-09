@@ -2,60 +2,18 @@ name: Project Automation
 
 on:
   issues:
-    types: [opened, labeled, unlabeled, reopened, closed]
-  pull_request:
-    types: [opened, closed, reopened, ready_for_review]
+    types: [opened]
 
 jobs:
-  create_issues:
+  add_to_project:
+    if: contains(github.event.issue.labels.*.name, 'from-spec')
     runs-on: ubuntu-latest
     permissions:
       issues: write
+      projects: write
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Extract title from markdown
-        id: extract_title
-        run: |
-          title=$(grep -m 1 '^# ' tasks/sample-task.md | sed 's/^# //')
-          echo "title=$title" >> $GITHUB_OUTPUT
-
-      - name: Create issue from task file
-        uses: peter-evans/create-issue-from-file@v4
-        with:
-          title: ${{ steps.extract_title.outputs.title }}
-          content-filepath: tasks/sample-task.md
-          token: ${{ secrets.PROJECTS_TOKEN }}
-
-      - name: Feature label → Ready for Tasks
-        if: contains(github.event.issue.labels.*.name, 'feature')
+      - name: Add issue to project board
         uses: actions/add-to-project@v0.5.0
         with:
           project-url: https://github.com/users/ludwa6/projects/1
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          field-values: Status=📝 Ready for Tasks
-
-      - name: Bug label → In Progress
-        if: contains(github.event.issue.labels.*.name, 'bug')
-        uses: actions/add-to-project@v0.5.0
-        with:
-          project-url: https://github.com/users/ludwa6/projects/1
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          field-values: Status=🛠️ In Progress
-
-      - name: Label review → In Review
-        if: contains(github.event.issue.labels.*.name, 'review')
-        uses: actions/add-to-project@v0.5.0
-        with:
-          project-url: https://github.com/users/ludwa6/projects/1
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          field-values: Status=🔍 In Review
-
-      - name: Closed issues → Done
-        if: github.event.action == 'closed'
-        uses: actions/add-to-project@v0.5.0
-        with:
-          project-url: https://github.com/users/ludwa6/projects/1
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          field-values: Status=✅ Done
+          github-token: ${{ secrets.PROJECTS_TOKEN }}
