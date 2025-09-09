@@ -55,6 +55,7 @@ jobs:
         with:
           github-token: ${{ secrets.PROJECTS_TOKEN }}
           script: |
+            const sleep = ms => new Promise(r => setTimeout(r, ms));
             const matchTitle = `${{ github.event.inputs.match_title }}`.trim();
             const createdBy  = `${{ github.event.inputs.created_by }}`.trim();
             const issues = await github.paginate(github.rest.issues.listForRepo, {
@@ -78,5 +79,7 @@ jobs:
                 state: 'closed'
               });
               console.log(`Closed #${m.number}`);
+              await sleep(1500); // sleep 1.5 seconds to avoid secondary rate limit
             }
             return { closed: matches.length };
+
