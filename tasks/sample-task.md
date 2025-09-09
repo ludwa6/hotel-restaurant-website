@@ -1,4 +1,4 @@
-# Sample Task: Add Contact Page
+# Contact Page Creation
 
 ## 🎯 Goal
 Create a simple “Contact Us” page so visitors can reach the hotel & restaurant.
