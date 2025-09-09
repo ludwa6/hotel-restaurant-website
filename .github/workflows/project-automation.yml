@@ -7,16 +7,26 @@ on:
     types: [opened, closed, reopened, ready_for_review]
 
 jobs:
-  project_automation:
+  create_issues:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
-      - name: Add issues to Spec Draft
-        if: github.event_name == 'issues' && github.event.action == 'opened'
-        uses: actions/add-to-project@v0.5.0
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Extract title from markdown
+        id: extract_title
+        run: |
+          title=$(grep -m 1 '^# ' tasks/sample-task.md | sed 's/^# //')
+          echo "title=$title" >> $GITHUB_OUTPUT
+
+      - name: Create issue from task file
+        uses: peter-evans/create-issue-from-file@v4
         with:
-          project-url: https://github.com/users/ludwa6/projects/1
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          field-values: Status=📄 Spec Draft
+          title: ${{ steps.extract_title.outputs.title }}
+          content-filepath: tasks/sample-task.md
+          token: ${{ secrets.PROJECTS_TOKEN }}
 
       - name: Feature label → Ready for Tasks
         if: contains(github.event.issue.labels.*.name, 'feature')
